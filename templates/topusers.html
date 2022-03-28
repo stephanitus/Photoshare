@@ -1,0 +1,28 @@
+<!doctype html>
+<link rel= "stylesheet" type= "text/css" href="{{ url_for('static' ,filename='app.css') }}">
+
+<div class="navbar">
+    <ul>
+        <li><a href='/'>Photoshare</a></li>
+        <li><a href='/topusers'>Top Users</a></li>
+        {% if current_user.is_active %}
+        <li><a href='/friends'>Friends</a></li>
+        <li><a href='/upload'>Upload a photo</a></li>
+        <li><a href='/profile'>Profile</a></li>
+        <li><a href='/logout'>Logout</a></li>
+        {% else %}
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/register'>Register</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+{% if topusers|length %}
+<ul>
+    {% for user in topusers %}
+        <li>{{user[0]}} {{user[1]}}: {{user[2]}}</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <h3>No users yet!</h3>
+{% endif %}

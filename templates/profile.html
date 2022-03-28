@@ -1,0 +1,69 @@
+<!doctype html>
+<link rel= "stylesheet" type= "text/css" href="{{ url_for('static' ,filename='app.css') }}">
+
+<div class="navbar">
+    <ul>
+        <li><a href='/'>Photoshare</a></li>
+        <li><a href='/topusers'>Top Users</a></li>
+        {% if current_user.is_active %}
+        <li><a href='/friends'>Friends</a></li>
+        <li><a href='/upload'>Upload a photo</a></li>
+        <li><a href='/profile'>Profile</a></li>
+        <li><a href='/logout'>Logout</a></li>
+        {% else %}
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/register'>Register</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+<div style="text-align: center;">
+    <h1>{{firstname}} {{lastname}}</h1>
+    <h2>Contribution Score: {{contribution}}</h2>
+</div>
+
+<div>
+    <h2>Albums</h2>
+    {% for album in albums %}
+    <div>
+        Title: <a href="/viewalbum/{{album[1]}}">{{album[0]}}</a>
+        <a href="/delete_album/{{album[1]}}">Delete</a>
+    </div>
+    {% endfor %}
+</div>
+
+<div>
+    <h2>Tags</h2>
+    {% for tag in tags %}
+    <a href="/view_user_tag/{{tag[0]}}">{{tag[0]}}</a>
+    {% endfor %}
+</div>
+
+{% if photos|length %}
+<div class="explore">
+    <ul>
+        {% for photo in photos %}
+        <li>
+          <p>{{photo[0]}} {{photo[1]}}</p> <a href="/delete_photo/{{photo[5]}}">Delete</a><br/>
+          <img src='data:image/jpg;base64, {{ base64.b64encode(photo[2]).decode("ascii") }}'/> <br/>
+          <p>{{photo[3]}}</p> <br/>
+          <p>Album:</p> <a href="/viewalbum/{{photo[6]}}">{{photo[4]}}</a> <br/>
+          <p>Tags:</p>  {% for tag in photo[5] | get_tags %}
+                          <a href="/viewtag/{{tag[0]}}">{{tag[0]}}</a>
+                        {% endfor %}
+                    <br/>
+
+          <div>
+            <a href="/like/{{photo[5]}}">Like 👍</a>
+          </div>
+          <div>
+            <a href="/viewlikes/{{photo[5]}}">View Likes</a>
+            <a href="/viewcomments/{{photo[5]}}">Comments</a>
+          </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+    <h3 style="text-align:center;">No photos yet!</h3>
+{% endif %}

@@ -1,0 +1,38 @@
+<!doctype html>
+<link rel= "stylesheet" type= "text/css" href="{{ url_for('static' ,filename='app.css') }}">
+
+<div class="navbar">
+    <ul>
+        <li><a href='/'>Photoshare</a></li>
+        <li><a href='/topusers'>Top Users</a></li>
+        {% if current_user.is_active %}
+        <li><a href='/friends'>Friends</a></li>
+        <li><a href='/upload'>Upload a photo</a></li>
+        <li><a href='/profile'>Profile</a></li>
+        <li><a href='/logout'>Logout</a></li>
+        {% else %}
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/register'>Register</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+{% if comments|length %}
+<ul>
+    {% for comment in comments %}
+        <li>{{comment[0]}} {{comment[1]}}: {{comment[2]}}</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <h3>No comments yet!</h3>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" action="/postcomment/{{picture_id}}">
+    <label for="comment">Enter Comment:</label>
+    <textarea name="comment" required='true'></textarea>
+    <input type="submit" value="Post" />
+</form>
+
+{% if message %}
+    <p>{{message}}</p>
+{% endif %}

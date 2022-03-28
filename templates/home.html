@@ -1,0 +1,64 @@
+<!doctype html>
+<link rel= "stylesheet" type= "text/css" href="{{ url_for('static' ,filename='app.css') }}">
+<title>Photoshare</title>
+
+<div class="navbar">
+  <ul>
+    <li><a href='/'>Photoshare</a></li>
+    <li><a href='/topusers'>Top Users</a></li>
+    {% if current_user.is_active %}
+    <li><a href='/friends'>Friends</a></li>
+    <li><a href='/upload'>Upload a photo</a></li>
+    <li><a href='/profile'>Profile</a></li>
+    <li><a href='/logout'>Logout</a></li>
+    {% else %}
+    <li><a href='/login'>Login</a></li>
+    <li><a href='/register'>Register</a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<div class="trending">
+  <h3>Trending Tags</h3>
+  {% for tag in null|top5tags %}
+    <a href="/viewtag/{{tag[0]}}">{{tag[0]}}({{tag[1]}})</a>
+  {% endfor %}<br/>
+  <a href="/recommended">View Your Recommended Photos</a>
+</div>
+
+<form method="get" action="/search_tags" class="trending">
+  <input type="text" name="search" required="true" placeholder="Search By Tags">
+  <input type="submit" value="Search" />
+</form>
+
+<form method="get" action="/search_comments" class="trending">
+  <input type="text" name="search" required="true" placeholder="Search By Comments">
+  <input type="submit" value="Search" />
+</form>
+
+<div class="explore">
+  {% if photos %}
+  <h2>Activity Feed</h2>
+      <ul>
+      {% for photo in photos %}
+          <li>
+            <p>{{photo[0]}} {{photo[1]}}</p>
+            <img src='data:image/jpg;base64, {{ base64.b64encode(photo[2]).decode("ascii") }}'/>
+            <p>{{photo[3]}}</p><br/>
+            <p>Album:</p> <a href="/viewalbum/{{photo[6]}}">{{photo[4]}}</a><br/>
+            <p>Tags:</p>  {% for tag in photo[5] | get_tags %}
+                            <a href="/viewtag/{{tag[0]}}">{{tag[0]}}</a>
+                          {% endfor %}
+                      <br/>
+            <div>
+              <a href="/like/{{photo[5]}}">Like 👍</a>
+            </div>
+            <div>
+              <a href="/viewlikes/{{photo[5]}}">View Likes</a>
+              <a href="/viewcomments/{{photo[5]}}">Comments</a>
+            </div>
+          </li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+</div>

@@ -1,0 +1,48 @@
+<!doctype html>
+<link rel= "stylesheet" type= "text/css" href="{{ url_for('static' ,filename='app.css') }}">
+
+<div class="navbar">
+    <ul>
+        <li><a href='/'>Photoshare</a></li>
+        <li><a href='/topusers'>Top Users</a></li>
+        {% if current_user.is_active %}
+        <li><a href='/friends'>Friends</a></li>
+        <li><a href='/upload'>Upload a photo</a></li>
+        <li><a href='/profile'>Profile</a></li>
+        <li><a href='/logout'>Logout</a></li>
+        {% else %}
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/register'>Register</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+<h2>Friend List:</h2>
+{% if user_friends %}
+<hr>
+    <ul>
+    {% for friend in user_friends %}
+        <li>{{friend}}<br>
+    {% endfor %}
+    </ul>
+{% else %}
+<p>Try adding some friends!</p>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" action="/add_friend">
+    <label for="email">Add a friend via email:</label>
+    <input type="text" name="email" required="true" placeholder="Friend Email">
+    <input type="submit" value="Add" />
+</form>
+
+<h2>Recommended Friends:</h2>
+{% if recommendations %}
+<hr>
+    <ul>
+    {% for friend in recommendations %}
+        <li>{{friend}}<br>
+    {% endfor %}
+    </ul>
+{% else %}
+<p>No recommendations yet! Keep adding more friends.</p>
+{% endif %}
